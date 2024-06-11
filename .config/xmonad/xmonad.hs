@@ -13,6 +13,7 @@ import XMonad.Hooks.EwmhDesktops
 import XMonad.Util.Loggers
 
 import XMonad.Layout.Fullscreen (fullscreenEventHook, fullscreenManageHook, fullscreenFull)
+import XMonad.Layout.Spacing
 
 main :: IO ()
 main = xmonad
@@ -57,11 +58,11 @@ myModMask = mod1Mask
 myTerminal = "st"
 myBorderWidth = 0
 
-myLayoutHook = toggleLayouts (noBorders Full) $ Tall 1 (3/100) (1/2) ||| Full
+myLayoutHook = toggleLayouts (noBorders Full) $ spacingWithEdge 4 $ Tall 1 (3/100) (1/2) ||| Full
 
 myManageHook = fullscreenManageHook <+> manageHook def
 
--- myHandleEventHook = fullscreenEventHook <+> handleEventHook def
+myHandleEventHook = handleEventHook def
 
 -- startuphook
 myStartupHook :: X ()
@@ -69,6 +70,7 @@ myStartupHook = do
   spawn "~/.config/xmonad/scripts/pipes.sh &"
   spawn "~/.config/xmonad/scripts/volume-pipe.sh &"
   spawn "~/.config/xmonad/scripts/backlight-pipe.sh &"
+  spawn "~/.config/polybar/launch.sh --forest &"
 
 -- xmobar config
 myXmobarPP :: PP
