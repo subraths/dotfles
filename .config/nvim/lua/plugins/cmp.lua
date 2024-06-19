@@ -1,5 +1,8 @@
 return {
 	{
+		"hrsh7th/cmp-nvim-lsp",
+	},
+	{
 		"L3MON4D3/LuaSnip",
 		dependencies = {
 			"rafamadriz/friendly-snippets",
@@ -7,20 +10,19 @@ return {
 		},
 	},
 	{
-		"hrsh7th/cmp-nvim-lsp",
-	},
-	{
 		"hrsh7th/nvim-cmp",
 		lazy = false,
 		dependencies = {
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-path",
+			"windwp/nvim-autopairs",
 		},
 		config = function()
 			local cmp = require("cmp")
-			local cmp_format = require("lsp-zero").cmp_format()
-
 			local luasnip = require("luasnip")
+			-- If you want insert `(` after select function or method item
+			local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+			cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 
 			luasnip.filetype_extend("javascript", { "html" })
 			luasnip.filetype_extend("javascriptreact", { "html" })
@@ -28,7 +30,41 @@ return {
 
 			require("luasnip.loaders.from_vscode").lazy_load()
 
+			local cmp_kinds = {
+				Text = "  ",
+				Method = "  ",
+				Function = "  ",
+				Constructor = "  ",
+				Field = "  ",
+				Variable = "  ",
+				Class = "  ",
+				Interface = "  ",
+				Module = "  ",
+				Property = "  ",
+				Unit = "  ",
+				Value = "  ",
+				Enum = "  ",
+				Keyword = "  ",
+				Snippet = "  ",
+				Color = "  ",
+				File = "  ",
+				Reference = "  ",
+				Folder = "  ",
+				EnumMember = "  ",
+				Constant = "  ",
+				Struct = "  ",
+				Event = "  ",
+				Operator = "  ",
+				TypeParameter = "  ",
+			}
+
 			cmp.setup({
+				formatting = {
+					format = function(_, vim_item)
+						vim_item.kind = (cmp_kinds[vim_item.kind] or "") .. vim_item.kind
+						return vim_item
+					end,
+				},
 				window = {
 					documentation = cmp.config.window.bordered(),
 					completion = cmp.config.window.bordered(),
@@ -42,6 +78,7 @@ return {
 						require("luasnip").lsp_expand(args.body)
 					end,
 				},
+
 				mapping = cmp.mapping.preset.insert({
 					["<C-b>"] = cmp.mapping.scroll_docs(-4),
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
@@ -59,8 +96,6 @@ return {
 					["<S-Tab>"] = cmp.mapping(function()
 						if cmp.visible() then
 							cmp.select_prev_item()
-						elseif vim.fn["vsnip#jumpable"](-1) == 1 then
-							feedkey("<Plug>(vsnip-jump-prev)", "")
 						end
 					end, { "i", "s" }),
 				}),
@@ -78,15 +113,6 @@ return {
 				}, {
 					{ name = "buffer" },
 				}),
-				formatting = {
-					fields = { "abbr", "kind", "menu" },
-					format = require("lspkind").cmp_format({
-						mode = "symbol",
-						maxwidth = 50,
-						ellipsis_char = "...",
-						symbol_map = { Codeium = "" },
-					}),
-				},
 			})
 		end,
 	},

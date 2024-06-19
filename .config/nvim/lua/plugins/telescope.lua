@@ -9,6 +9,19 @@ return {
 			vim.keymap.set("n", "ff", builtin.find_files, {})
 			vim.keymap.set("n", "fg", builtin.live_grep, {})
 			vim.keymap.set("n", "fb", builtin.buffers, {})
+			vim.keymap.set("n", "gr", builtin.lsp_references, {})
+
+			local open_with_trouble = require("trouble.sources.telescope").open
+			local telescope = require("telescope")
+
+			telescope.setup({
+				defaults = {
+					mappings = {
+						i = { ["<c-t>"] = open_with_trouble },
+						n = { ["<c-t>"] = open_with_trouble },
+					},
+				},
+			})
 		end,
 	},
 	{
