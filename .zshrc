@@ -9,33 +9,21 @@ source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source /usr/share/zsh/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 source /usr/share/zsh/plugins/pnpm-shell-completion/pnpm-shell-completion.zsh
+source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+
 eval "$(_PIPENV_COMPLETE=zsh_source pipenv)"
 
 HISTFILE=~/.histfile
 HISTSIZE=1000
-SAVEHIST=1000
-bindkey -e
-# End of lines configured by zsh-newuser-install
-# The following lines were added by compinstall
-zstyle :compinstall filename '/home/subrath/.zshrc'
-
-autoload -Uz compinit && compinit
-# End of lines added by compinstall
-#
-# source ~/.zsh-plugins/zap-prompt.zsh-theme
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#8a753d"
 
 PROMPT="%~ "
-# precmd () { __git_ps1  "%~" "%s " }
+#precmd () { __git_ps1  "%~" "%s " }
 
 
-#alias ls='lsd'
 alias ra="ranger"
 alias grep="rg"
 alias vim="nvim"
-
-export EDITOR='vim'
-export VISUAL='vim'
+alias nn="NVIM_APPNAME=personal_nvim nvim"
 
 ex ()
 {
@@ -63,30 +51,9 @@ ex ()
   fi
 }
 
-# pnpm
-export PNPM_HOME="/home/arch/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
-
-source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-[ -f "/home/arch/.ghcup/env" ] && source "/home/arch/.ghcup/env" # ghcup-envsource /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
-eval "$(rbenv init - zsh)"
-
 bindkey -M menuselect              '^I'         menu-complete
 bindkey -M menuselect "$terminfo[kcbt]" reverse-menu-complete
 
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='nvim'
-else
-  export EDITOR='nvim'
-fi
 
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
